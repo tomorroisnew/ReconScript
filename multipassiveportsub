@@ -1,0 +1,27 @@
+#!/bin/bash
+
+while getopts n: flag
+do
+    case "${flag}" in
+        n) ProgramName=${OPTARG};;
+    esac
+done
+echo "creating $ProgramName folder"
+
+mkdir $ProgramName
+cd $ProgramName
+
+i=1
+shift $((OPTIND-1))  # Shift the arguments to exclude program name
+for user in "$@" 
+do
+    mkdir $user
+    cd $user
+    passiveportsub $user &
+    cd ../
+    i=$((i + 1))
+done
+
+wait
+
+echo "Passive Subdomain Enumeration for program $ProgramName finished"
