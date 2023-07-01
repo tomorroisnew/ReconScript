@@ -1,0 +1,11 @@
+#!/bin/bash
+
+amass enum --passive -d $1 -o amass.txt &
+subfinder -d $1 -all -o subfinder.txt &
+assetfinder $1 -subs-only | grep -v '*' | tee assetfinder.txt &
+
+wait
+
+cat * | sort -u | grep $1 | httpx -no-color -o ../$1.txt -title -status-code -location -content-length &
+
+wait
